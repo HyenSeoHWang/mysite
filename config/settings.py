@@ -55,7 +55,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',#데이터베이스 엔진을 딕셔너리를 통해 정의했음
-        'NAME': BASE_DIR / 'db.sqlite3',#데이터베이스 파일을 BASE_DIR 디렉터리(파일)에 존재하는 db.sqlite3에 저장한다는 뜻
+        'NAME': BASE_DIR / 'db.sqlite3',#데이터베이스 파일을 BASE_DIR 디렉터리(여기서는 projects 파일이 BASE_DIR)에 존재하는 db.sqlite3에 저장한다는 뜻
     }
 }
 
@@ -119,3 +119,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]

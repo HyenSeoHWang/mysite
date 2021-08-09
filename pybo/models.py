@@ -8,20 +8,21 @@ https://docs.djangoproject.com/en/3.0/ref/models/fields/#field-types
 * 데이터베이스에서 데이터를 저장하기 위한 데이터 집합의 모임을 '테이블'이라한다
 * 테이블을 생성하기위해서는 pybo 라는 앱을 setting.py에 등록해야한다
 * 파이썬 shell에서 데이터를 조회하는 방법이 담긴 URL : https://docs.djangoproject.com/en/3.0/topics/db/queries/
+
 '''
 
 from django.db import models
 
-class Question(models.Model):
-    subject = models.CharField(max_length=200)#CharFiled =>글자수제한이 있는 텍스트
-    content = models.TextField()#TextFeild =>글자수 제한이 없는 텍스트
-    create_date = models.DateField()#DateFeild =>날짜와 시간에 관계된 속성이 필요할때
+class Question(models.Model):#Question 이라는 Database 공간을 만듦으로 이해 
+    subject = models.CharField(max_length=200)#CharFiled =>글자수제한이 있는 텍스트를 받는 field
+    content = models.TextField()#TextFeild =>글자수 제한이 없는 텍스트를 받는 field
+    create_date = models.DateField()#DateFeild =>날짜와 시간에 관계된 속성을 받는 field
 
     def __str__(self): #파이썬 shell에서 등록된 질문을 조회할때 id(=pk)가 아닌 subject내용으로 나오게하는 함수
         return self.subject
 
 class Answer(models.Model):#Anser 모델은 질문에 대한 답이기 때문에 Question모델의 속성을 가져와야한다
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)#ForeignKey => 기존모델의 속성으로 연결할때
-    # on_delete=models.CASCADE의 의미는 이 답변과 연결된 질문(Question)이 삭제될 경우 답변(Answer)도 함께 삭제된다는 의미이다.
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)#ForeignKey => 기존모델의 속성으로 연결을받는 field
+    #on_delete=models.CASCADE의 의미는 이 답변과 연결된 질문(Question)이 삭제될 경우 답변(Answer)도 함께 삭제된다는 의미이다.
     content = models.TextField()
     create_date = models.DateTimeField()
