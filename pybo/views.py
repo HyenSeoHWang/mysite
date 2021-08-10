@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-#from django.http import HttpResponse # HttpResponse 는 사용자가 요청한 페이지에 응답할때 사용하는 장고의 클래스이다
 from .models import Question, Answer
 from django.utils import timezone
+from .forms import QuestionForm, AnswerForm
 
 def index(request):
     '''
-    pybo 목록 출력
+    pybo 질문 목록 출력
     '''
     #Question(models에 존재하는 클래스)의 objects(객체)를 생성날짜의 역순(최신순)으로 정렬해라
     question_list = Question.objects.order_by('-create_date')#order_by는 조회결과를 정렬하는 함수, -create_date 생성날짜를 역순으로 정렬
@@ -14,13 +14,43 @@ def index(request):
     #render함수의 context 인수는 템플릿에 표시 할 변수를 제공한다. 즉, 여기서는 question_list.html에서 사용할 question_list를 엑세스했음
 
 def detail(request, question_id):
+    '''
+    pybo 질문 내용 출력
+    '''
     question = get_object_or_404(Question, pk =question_id)
     context = {'question' : question}
     return render(request, 'pybo/question_detail.html', context)
 
 def answer_create(request, question_id):
-    question = get_object_or_404(Question,pk=question_id)
-    answer = Answer(question=question, content= request.POST.get('content'), create_date=timezone.now())
-    answer.save()
-    return redirect('pybo:detail', question_id=question.id) #redirect를 사용한 이유는 답변생성화면을 작성 후 다시 답변생성화면을 유지하기위함
-    #redirect는 url로 이동하고 render는 템플릿을 불러온다. 즉,여기서는 detail URL로 이동해서 다시 views로 넘어간다
+    """
+    pybo 답변등록
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.method == "POST":
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.create_date = timezone.now()
+            answer.question = question
+            answer.save()
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        form = AnswerForm()
+    context = {'question': question, 'form': form}
+    return render(request, 'pybo/question_detail.html', context)  
+
+def question_create(request):
+    '''
+    pybo 질문등록
+    '''
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.create_date = timezone.now()
+            question.save()
+            return redirect('pybo:index')
+    else:
+        form = QuestionForm()
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context)

@@ -1,24 +1,9 @@
-<!-- 
-*장고 템플릿 URL : https://docs.djangoproject.com/en/3.0/topics/templates/
-
-*부트스트랩 사용 이전의 코드 
-    {% if question_list %} 
-        <ol>
-            {% for question in question_list %} 
-                <li><a href ="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a></li>
-            {% endfor %}
-        </ol>
-    {% else %}
-        <p>질문이 없습니다.</p>
-    {% endif %}
--->
-
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+{% extends 'base.html' %}
+{% block content %}
 <div class="container my-3">
     <table class="table">
         <thead>
-        <tr class="thead-dark">
+        <tr class="thead-dark">`
             <th>번호</th>
             <th>제목</th>
             <th>작성일시</th>
@@ -42,4 +27,6 @@
         {% endif %}
         </tbody>
     </table>
+    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">질문 등록하기</a> 
 </div>
+{% endblock %}
